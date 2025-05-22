@@ -8,14 +8,12 @@ class ApplicationPrepare < Thor
 
   def setup_action
     say "Add Optional Apps entry in the menu", :green
-    insert_into_file "config/environment.rb", :after => "Dev Database      Install development database in Docker\n" do
-      <<-EOF
-  Optional Apps    Install optional apps in Docker
-  EOF
+    # Call the method to add the entry
     end
   end
 
   no_commands do
-    def add_menu_entry
+    # Add helper methods here
+  end
   end
 end
