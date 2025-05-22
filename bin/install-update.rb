@@ -9,11 +9,9 @@ class ApplicationPrepare < Thor
   def setup_action
     say "Add Optional Apps entry in the menu", :green
     # Call the method to add the entry
-    end
   end
 
   no_commands do
     # Add helper methods here
-  end
   end
 end
