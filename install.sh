@@ -5,12 +5,17 @@ set -e
 trap 'echo "Omakub installation failed! You can retry by running: source ~/.local/share/omakub-supercharged/install.sh"' ERR
 
 # Install dependencies
-source ~/.local/share/omakub-supercharged/install/terminal/required/app-gum.sh >/dev/null
+source ~/.local/share/omakub-supercharged/src/install/terminal/required/app-gum.sh >/dev/null
+
 
 # Check if the user has already installed Omakub
+echo "[DEBUG] gum binary: $(which gum)"
+echo "[DEBUG] gum version: $(gum --version)"
 if [ -d ~/.local/share/omakub ]; then
   echo "Omakub is installed ✅"
-  if gum confirm --default y --prompt "Do you want to patch the official Omakub?" ; then
+  echo "Do you want to patch the official Omakub?"
+  if gum confirm
+  then
     # Patching the official Omakub
     source ~/.local/share/omakub-supercharged/patching.sh
   else
