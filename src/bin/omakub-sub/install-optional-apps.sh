@@ -2,7 +2,10 @@ CHOICES=(
   "Visual Studio Code Insiders      Code editor for developers"
   "Linkquisition                    Browser-picker"
   "Braves                           All versions of Brave"
-  "Firefoxes                        All versions of Firefox"
+  "Firefox                          Firefox Stable"
+  "Firefox Beta                     Firefox Beta Channel"
+  "Firefox Developer                Firefox Developer Edition"
+  "Firefox Nightly                  Firefox Nightly Channel"
   "Pano                             Next-gen Clipboard Manager"
   "<< Back           "
 )
