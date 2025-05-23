@@ -1,6 +1,6 @@
 export OMAKUB_DIRECTORY="${OMAKUB_DIRECTORY:-$HOME/.local/share/omakub}"
 
-puts "OMAKUB_DIRECTORY: $OMAKUB_DIRECTORY"
+echo "OMAKUB_DIRECTORY: $OMAKUB_DIRECTORY"
 
 echo "Add Helper functions to Omakub"
 cp -r ~/.local/share/omakub-supercharged/src/shared $OMAKUB_DIRECTORY/shared
