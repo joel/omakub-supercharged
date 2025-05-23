@@ -15,29 +15,45 @@ class ApplicationPrepare < Thor
       exit 1
     end
 
-    menu_entry = '  "Optional Apps     Install optional applications"\n'
-    case_entry = '  "optional-apps") INSTALLER_FILE=\"$OMAKUB_PATH/bin/omakub-sub/install-optional-apps.sh\" ;;\n'
+    menu_entry = "  \"Optional Apps     Install optional applications\"\n"
+    case_entry = "  \"optional-apps\") INSTALLER_FILE=\\\"$OMAKUB_PATH/bin/omakub-sub/install-optional-apps.sh\\\" ;;\n"
 
-    file_content = File.read(target_file)
-    already_has_menu = file_content.include?(menu_entry.strip)
-    already_has_case = file_content.include?(case_entry.strip)
+    lines = File.readlines(target_file)
+    already_has_menu = lines.any? { |l| l.strip == menu_entry.strip }
+    already_has_case = lines.any? { |l| l.strip == case_entry.strip }
 
     # Insert menu entry after Dev Database
-    dev_database_entry = /  "Dev Database      Install development database in Docker"\n/
     unless already_has_menu
-      inject_into_file target_file, menu_entry, after: dev_database_entry
-      say "Added menu entry to #{target_file} after Dev Database.", :green
+      dev_db_index = lines.find_index { |l| l =~ /  \"Dev Database      Install development database in Docker\"/ }
+      if dev_db_index
+        lines.insert(dev_db_index + 1, menu_entry)
+        say "Added menu entry to #{target_file} after Dev Database.", :green
+      else
+        say "Dev Database entry not found. Menu entry not added.", :red
+      end
     else
       say "Menu entry already present in #{target_file}.", :yellow
     end
 
     # Insert the case entry after the dev-editor case
-    dev_editor_case = /"dev-editor"\).*\n/
     unless already_has_case
-      inject_into_file target_file, case_entry, after: dev_editor_case
-      say "Added case entry to #{target_file}.", :green
+      dev_editor_index = lines.find_index { |l| l =~ /\"dev-editor\"\)/ }
+      if dev_editor_index
+        # Find the end of the dev-editor case (look for the next ';;' after dev-editor)
+        case_end_index = lines[dev_editor_index..].find_index { |l| l.strip.end_with?(';;') }
+        insert_at = dev_editor_index + (case_end_index ? case_end_index + 1 : 1)
+        lines.insert(insert_at, case_entry)
+        say "Added case entry to #{target_file}.", :green
+      else
+        say "dev-editor case entry not found. Case entry not added.", :red
+      end
     else
       say "Case entry already present in #{target_file}.", :yellow
+    end
+
+    # Write back to file if any changes were made
+    unless already_has_menu && already_has_case
+      File.open(target_file, 'w') { |f| f.write(lines.join) }
     end
   end
 
@@ -45,3 +61,5 @@ class ApplicationPrepare < Thor
     # Helper methods can be added here if needed
   end
 end
+
+ApplicationPrepare.start(ARGV)
