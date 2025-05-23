@@ -1,7 +1,9 @@
 CHOICES=(
   "Visual Studio Code Insiders      Code editor for developers"
   "Linkquisition                    Browser-picker"
-  "Braves                           All versions of Brave"
+  "Brave                            Brave Browser Stable"
+  "Brave Beta                       Brave Browser Beta"
+  "Brave Nightly                    Brave Browser Nightly"
   "Firefox                          Firefox Stable"
   "Firefox Beta                     Firefox Beta Channel"
   "Firefox Developer                Firefox Developer Edition"
