@@ -7,7 +7,7 @@ class ApplicationPrepare < Thor
   desc 'setup_action [OPTIONS]', 'Updates $OMAKUB_PATH/bin/omakub-sub/install.sh to add Optional Apps entry as in install-to.sh template.'
 
   def setup_action
-    omakub_path = ENV['OMAKUB_PATH'] || File.expand_path('~/.local/share/omakub-patch')
+    omakub_path = ENV['OMAKUB_PATH'] || File.expand_path('~/.local/share/omakub-supercharged')
     target_file = File.join(omakub_path, 'bin/omakub-sub/install.sh')
 
     unless File.exist?(target_file)
