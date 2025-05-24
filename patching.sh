@@ -9,7 +9,7 @@ echo "Add Utilities to Omakub"
 cp -fr ~/.local/share/omakub-supercharged/src/utils $OMAKUB_DIRECTORY/utils
 
 echo "Add Optional Applications to Omakub"
-cp -fr ~/.local/share/omakub-supercharged/src/install/desktop/optional $OMAKUB_DIRECTORY/install/desktop/optional
+cp -f ~/.local/share/omakub-supercharged/src/install/desktop/optional/* $OMAKUB_DIRECTORY/install/desktop/optional/
 cp ~/.local/share/omakub-supercharged/src/bin/omakub-sub/install-optional-apps.sh $OMAKUB_DIRECTORY/bin/omakub-sub/install-optional-apps.sh
 
 echo "Overwrite Migrate script"
