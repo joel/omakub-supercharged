@@ -12,7 +12,7 @@ CHOICES=(
   "<< Back           "
 )
 
-CHOICE=$(gum choose "${CHOICES[@]}" --height 10 --header "Install optional applications")
+CHOICE=$(gum choose "${CHOICES[@]}" --height 11 --header "Install optional applications")
 
 if [[ "$CHOICE" == "<< Back"* ]] || [[ -z "$CHOICE" ]]; then
   # Don't install anything
