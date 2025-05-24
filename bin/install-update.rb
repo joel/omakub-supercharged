@@ -16,7 +16,7 @@ class ApplicationPrepare < Thor
     end
 
     menu_entry = "  \"Optional Apps     Install optional applications\"\n"
-    case_entry = "  \"optional-apps\") INSTALLER_FILE=\\\"$OMAKUB_PATH/bin/omakub-sub/install-optional-apps.sh\\\" ;;\n"
+    case_entry = "  \"optional-apps\") INSTALLER_FILE=\"$OMAKUB_PATH/bin/omakub-sub/install-optional-apps.sh\" ;;\n"
 
     lines = File.readlines(target_file)
     already_has_menu = lines.any? { |l| l.strip == menu_entry.strip }
