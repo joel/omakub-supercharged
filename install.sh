@@ -7,10 +7,10 @@ trap 'echo "Omakub installation failed! You can retry by running: source ~/.loca
 # Install dependencies
 source ~/.local/share/omakub-supercharged/src/install/terminal/required/app-gum.sh >/dev/null
 
-
 # Check if the user has already installed Omakub
 echo "[DEBUG] gum binary: $(which gum)"
 echo "[DEBUG] gum version: $(gum --version)"
+
 if [ -d ~/.local/share/omakub ]; then
   echo "Omakub is installed ✅"
   echo "Do you want to patch the official Omakub?"
