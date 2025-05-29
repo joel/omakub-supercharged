@@ -39,10 +39,15 @@ if [[ "$CHOICE" == "<< Back"* ]] || [[ -z "$CHOICE" ]]; then
   # Don't install anything
   echo ""
 else
-  INSTALLER=$(echo "$CHOICE" | awk -F ' {2,}' '{print $1}' | tr '[:upper:]' '[:lower:]' | sed 's/ /-/g')
+  # echo "Choice [$CHOICE]..." && sleep 2
+
+  # INSTALLER=$(echo "$CHOICE" | awk -F ' {2,}' '{print $1}' | tr '[:upper:]' '[:lower:]' | sed 's/^✖ *//;s/^✔ *//;s/ /-/g')
+  # INSTALLER=$(echo "$CHOICE" | sed 's/  \{2,\}[^ ]*$//' | tr '[:upper:]' '[:lower:]' | sed 's/^✖ *//;s/^✔ *//;s/ /-/g')
+  INSTALLER=$(echo "$CHOICE" | sed 's/  \{2,\}.*$//' | tr '[:upper:]' '[:lower:]' | sed 's/^✖ *//;s/^✔ *//;s/ /-/g')
   INSTALLER_FILE="$OMAKUB_PATH/install/desktop/optional/app-$INSTALLER.sh"
 
-echo "Installing $INSTALLER..." && sleep 2
+  echo "Installing [$INSTALLER]..." && sleep 2
+
   source $INSTALLER_FILE && gum spin --spinner globe --title "Install completed!" -- sleep 3
 fi
 
