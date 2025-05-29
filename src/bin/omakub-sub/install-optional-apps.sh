@@ -1,14 +1,31 @@
+sanitize_input() {
+  echo "$1" | sed 's/^✖ *//;s/^✔ *//;s/^ *//;s/ /-/g' | tr '[:upper:]' '[:lower:]'
+}
+
+# Helper to get status and tick using the new helper
+get_status_tick() {
+  local item="$1"
+
+  app_name=$(sanitize_input "$item")
+
+  if command -v "$app_name" &> /dev/null; then
+    echo "✔ $item"
+  else
+    echo "✖ $item"
+  fi
+}
+
 CHOICES=(
-  "Visual Studio Code Insiders      Code editor for developers"
-  "Linkquisition                    Browser-picker"
-  "Brave                            Brave Browser Stable"
-  "Brave Beta                       Brave Browser Beta"
-  "Brave Nightly                    Brave Browser Nightly"
-  "Firefox                          Firefox Stable"
-  "Firefox Beta                     Firefox Beta Channel"
-  "Firefox Developer                Firefox Developer Edition"
-  "Firefox Nightly                  Firefox Nightly Channel"
-  "Pano                             Next-gen Clipboard Manager"
+  "$(get_status_tick 'Code Insiders')          Code editor for developers"
+  "$(get_status_tick 'Linkquisition')          Browser-picker"
+  "$(get_status_tick 'Brave Browser')          Brave Browser Stable"
+  "$(get_status_tick 'Brave Browser Beta')     Brave Browser Beta"
+  "$(get_status_tick 'Brave Browser Nightly')  Brave Browser Nightly"
+  "$(get_status_tick 'Firefox')                Firefox Stable"
+  "$(get_status_tick 'Firefox Beta')           Firefox Beta Channel"
+  "$(get_status_tick 'Firefox Developer')      Firefox Developer Edition"
+  "$(get_status_tick 'Firefox Nightly')        Firefox Nightly Channel"
+  "$(get_status_tick 'Pano')                   Next-gen Clipboard Manager"
   "<< Back           "
 )
 
