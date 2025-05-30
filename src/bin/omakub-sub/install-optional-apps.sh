@@ -1,12 +1,12 @@
-sanitize_input() {
-  echo "$1" | sed 's/^✖ *//;s/^✔ *//;s/^ *//;s/ /-/g' | tr '[:upper:]' '[:lower:]'
+normalize() {
+  echo "$1" | sed 's/^✖ *//;s/^✔ *//;s/  \{2,\}.*$//' | tr '[:upper:]' '[:lower:]' | sed 's/ /-/g'
 }
 
 # Helper to get status and tick using the new helper
-get_status_tick() {
+icon_status() {
   local item="$1"
 
-  app_name=$(sanitize_input "$item")
+  app_name=$(normalize "$item")
 
   if command -v "$app_name" &> /dev/null; then
     echo "✔ $item"
@@ -16,21 +16,21 @@ get_status_tick() {
 }
 
 CHOICES=(
-  "$(get_status_tick 'Code Insiders')          Code editor for developers"
-  "$(get_status_tick 'Linkquisition')          Browser-picker"
-  "$(get_status_tick 'Brave Browser')          Brave Browser Stable"
-  "$(get_status_tick 'Brave Browser Beta')     Brave Browser Beta"
-  "$(get_status_tick 'Brave Browser Nightly')  Brave Browser Nightly"
-  "$(get_status_tick 'Firefox')                Firefox Stable"
-  "$(get_status_tick 'Firefox Beta')           Firefox Beta Channel"
-  "$(get_status_tick 'Firefox Developer')      Firefox Developer Edition"
-  "$(get_status_tick 'Firefox Nightly')        Firefox Nightly Channel"
-  "$(get_status_tick 'Google Chrome')          Google Chrome Stable"
-  "$(get_status_tick 'Google Chrome Beta')     Google Chrome Beta Channel"
-  "$(get_status_tick 'Google Chrome Unstable') Google Chrome Developer (Dev) Channel"
-  "$(get_status_tick 'Google Chrome Canary')   Google Chrome Canary Channel"
-  "$(get_status_tick 'Pano')                   Next-gen Clipboard Manager"
-  "<< Back           "
+  "$(icon_status 'Code Insiders            Code editor for developers')"
+  "$(icon_status 'Linkquisition            Browser-picker')"
+  "$(icon_status 'Brave Browser            Brave Browser Stable')"
+  "$(icon_status 'Brave Browser Beta       Brave Browser Beta')"
+  "$(icon_status 'Brave Browser Nightly    Brave Browser Nightly')"
+  "$(icon_status 'Firefox                  Firefox Stable')"
+  "$(icon_status 'Firefox Beta             Firefox Beta Channel')"
+  "$(icon_status 'Firefox Developer        Firefox Developer Edition')"
+  "$(icon_status 'Firefox Nightly          Firefox Nightly Channel')"
+  "$(icon_status 'Google Chrome            Google Chrome Stable')"
+  "$(icon_status 'Google Chrome Beta       Google Chrome Beta Channel')"
+  "$(icon_status 'Google Chrome Unstable   Google Chrome Developer (Dev) Channel')"
+  "$(icon_status 'Google Chrome Canary     Google Chrome Canary Channel')"
+  "$(icon_status 'Pano                     Next-gen Clipboard Manager')"
+  "<< Back                   "
 )
 
 CHOICE=$(gum choose "${CHOICES[@]}" --height 15 --header "Install optional applications")
@@ -39,15 +39,8 @@ if [[ "$CHOICE" == "<< Back"* ]] || [[ -z "$CHOICE" ]]; then
   # Don't install anything
   echo ""
 else
-  # echo "Choice [$CHOICE]..." && sleep 2
-
-  # INSTALLER=$(echo "$CHOICE" | awk -F ' {2,}' '{print $1}' | tr '[:upper:]' '[:lower:]' | sed 's/^✖ *//;s/^✔ *//;s/ /-/g')
-  # INSTALLER=$(echo "$CHOICE" | sed 's/  \{2,\}[^ ]*$//' | tr '[:upper:]' '[:lower:]' | sed 's/^✖ *//;s/^✔ *//;s/ /-/g')
-  INSTALLER=$(echo "$CHOICE" | sed 's/  \{2,\}.*$//' | tr '[:upper:]' '[:lower:]' | sed 's/^✖ *//;s/^✔ *//;s/ /-/g')
+  INSTALLER=$(normalize "$CHOICE")
   INSTALLER_FILE="$OMAKUB_PATH/install/desktop/optional/app-$INSTALLER.sh"
-
-  echo "Installing [$INSTALLER]..." && sleep 2
-
   source $INSTALLER_FILE && gum spin --spinner globe --title "Install completed!" -- sleep 3
 fi
 
