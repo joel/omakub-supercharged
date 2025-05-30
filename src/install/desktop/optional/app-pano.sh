@@ -42,7 +42,7 @@ if [ -d "$EXTENSION_DIR" ]; then
   rm -rf "$EXTENSION_DIR"
 fi
 mkdir -p "$EXTENSION_DIR"
-cp -r dist/* "$EXTENSION_DIR"
+cp -r $HOME/.gnome-shell-pano/* "$EXTENSION_DIR"
 
 log_message "INFO" "Complete installation log saved to $LOG_FILE" "$LOG_FILE"
 
