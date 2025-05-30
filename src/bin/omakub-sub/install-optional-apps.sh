@@ -27,7 +27,7 @@ CHOICES=(
   "$(get_status_tick 'Firefox Nightly')        Firefox Nightly Channel"
   "$(get_status_tick 'Google Chrome')          Google Chrome Stable"
   "$(get_status_tick 'Google Chrome Beta')     Google Chrome Beta Channel"
-  "$(get_status_tick 'Google Chrome Dev')      Google Chrome Developer Channel"
+  "$(get_status_tick 'Google Chrome Unstable') Google Chrome Developer (Dev) Channel"
   "$(get_status_tick 'Google Chrome Canary')   Google Chrome Canary Channel"
   "$(get_status_tick 'Pano')                   Next-gen Clipboard Manager"
   "<< Back           "
