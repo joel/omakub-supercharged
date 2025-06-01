@@ -1,7 +1,7 @@
-#!/usr/bin/env bash
-
 # Shared helper functions for Omakub installation scripts
 # This file contains common utilities used across multiple scripts
+
+source "${OMAKUB_PATH}/shared/helpers.sh"
 
 # Define colors for output
 GREEN="\033[0;32m"

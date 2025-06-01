@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # Install Brave Browser Beta
 
-
 # Source shared log initialization
 source "${OMAKUB_PATH}/shared/log-init"
 
