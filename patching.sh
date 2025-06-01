@@ -8,6 +8,9 @@ cp -fr ~/.local/share/omakub-supercharged/src/shared $OMAKUB_DIRECTORY/shared
 echo "Add Utilities to Omakub"
 cp -fr ~/.local/share/omakub-supercharged/src/utils $OMAKUB_DIRECTORY/utils
 
+echo "Add Config scripts to Omakub"
+cp -fr ~/.local/share/omakub-supercharged/src/configs $OMAKUB_DIRECTORY/configs
+
 echo "Add Optional Applications to Omakub"
 cp -f ~/.local/share/omakub-supercharged/src/install/desktop/optional/* $OMAKUB_DIRECTORY/install/desktop/optional/
 cp ~/.local/share/omakub-supercharged/src/bin/omakub-sub/install-optional-apps.sh $OMAKUB_DIRECTORY/bin/omakub-sub/install-optional-apps.sh
