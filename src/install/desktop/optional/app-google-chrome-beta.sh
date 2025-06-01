@@ -4,13 +4,9 @@
 # Browse the web with the Beta version of the most popular browser.
 # See https://www.google.com/chrome/beta/
 
-# Source shared helpers
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(dirname "$(dirname "$SCRIPT_DIR")")"
-source "$ROOT_DIR/../shared/helpers.sh"
 
-app_name="chrome-beta"
-log_file="$(setup_log "$app_name")"
+# Source shared log initialization
+source "${OMAKUB_PATH}/shared/log-init"
 
 tmp_dir="$(create_temp_dir)"
 cd "$tmp_dir" || exit 1

@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 # Install Brave Browser Beta
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-APP_NAME="$(basename "$0" | sed 's/^app-//' | sed 's/\.sh$//')"
-HELPERS_PATH="${OMAKUB_PATH}/shared/helpers.sh"
-TEMP_DIR=$(create_temp_dir)
-LOG_FILE=$(setup_log "$APP_NAME")
+
+# Source shared log initialization
+source "${OMAKUB_PATH}/shared/log-init"
 
 log_message "INFO" "Starting Brave Browser Beta installation..." "$LOG_FILE"
 
