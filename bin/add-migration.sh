@@ -18,7 +18,7 @@ USE_HUMAN_READABLE_DATE=false
 # fi
 
 # TARGET_DIR="$1"
-TARGET_DIR="${HOME}/.local/share/omakub/migrations"
+TARGET_DIR="${PWD}/src/migrations"
 
 # Check if the provided path actually exists and is a directory
 if [ ! -d "$TARGET_DIR" ]; then
