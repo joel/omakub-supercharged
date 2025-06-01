@@ -1,0 +1,10 @@
+[
+    {
+        "key": "alt+meta+left",
+        "command": "workbench.action.previousEditor"
+    },
+    {
+        "key": "alt+meta+right",
+        "command": "workbench.action.nextEditor"
+    }
+]
