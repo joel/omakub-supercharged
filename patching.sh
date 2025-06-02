@@ -18,5 +18,8 @@ cp ~/.local/share/omakub-supercharged/src/bin/omakub-sub/install-optional-apps.s
 echo "Overwrite Migrate script"
 cp -f ~/.local/share/omakub-supercharged/src/bin/omakub-sub/migrate.sh $OMAKUB_DIRECTORY/bin/omakub-sub/migrate.sh
 
+echo "Copy the migrations"
+cp -fr ~/.local/share/omakub-supercharged/src/migrations $OMAKUB_DIRECTORY/migrations
+
 echo "Add optional app entry to Install menu"
 ruby ~/.local/share/omakub-supercharged/bin/install-update.rb setup_action
