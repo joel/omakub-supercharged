@@ -32,7 +32,7 @@ done | sort -n > "$MIGRATIONS_FILE"
 # Also initialize the status log with all migrations as 'pending'
 while IFS= read -r migration_id; do
   migration_time="$(date '+%Y-%m-%d %H:%M:%S')"
-  echo "$migration_id,$migration_time,pending" >> "$MIGRATION_STATUS_FILE"
+  echo "$migration_id,$migration_time,done" >> "$MIGRATION_STATUS_FILE"
 done < "$MIGRATIONS_FILE"
 
 echo "Migrations dumped to $MIGRATIONS_FILE and status initialized in $MIGRATION_STATUS_FILE"
