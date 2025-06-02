@@ -18,13 +18,20 @@ if ! command -v git >/dev/null 2>&1; then
 	sudo apt-get install -y git >/dev/null
 fi
 
-echo "Cloning Omakub..."
-rm -rf ~/.local/share/omakub-supercharged >/dev/null
-git clone https://github.com/joel/omakub-supercharged.git ~/.local/share/omakub-supercharged >/dev/null
-if [[ $OMAKUB_REF != "master" ]]; then
+echo "Cloning or updating Omakub..."
+if [ -d ~/.local/share/omakub-supercharged/.git ]; then
 	cd ~/.local/share/omakub-supercharged
-	git fetch origin "${OMAKUB_REF:-stable}" && git checkout "${OMAKUB_REF:-stable}"
+	git fetch origin "${OMAKUB_REF:-stable}"
+	git checkout "${OMAKUB_REF:-stable}"
+	git pull origin "${OMAKUB_REF:-stable}"
 	cd -
+else
+	git clone https://github.com/joel/omakub-supercharged.git ~/.local/share/omakub-supercharged >/dev/null
+	if [[ $OMAKUB_REF != "master" ]]; then
+		cd ~/.local/share/omakub-supercharged
+		git fetch origin "${OMAKUB_REF:-stable}" && git checkout "${OMAKUB_REF:-stable}"
+		cd -
+	fi
 fi
 
 echo "Installation starting..."
