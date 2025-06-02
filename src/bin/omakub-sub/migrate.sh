@@ -40,8 +40,6 @@ done < "$MIGRATIONS_FILE"
 # Update the local repository with the latest changes from the remote repository
 git pull > /dev/null
 
-# Initialize an array to track failed migrations
-FAILED_MIGRATIONS=()
 
 # Iterate through all shell script files in the migrations directory
 for file in $OMAKUB_PATH/migrations/*.sh; do
@@ -100,10 +98,6 @@ for file in $OMAKUB_PATH/migrations/*.sh; do
   # Record status (CSV: migration_id,date_time,status)
   echo "$migrate_at,$migration_time,$migration_status" >> "$MIGRATION_STATUS_FILE"
 
-  # Track failed migrations for retry
-  if [ "$migration_status" = "failed" ]; then
-    FAILED_MIGRATIONS+=("$file")
-  fi
 done
 
  
