@@ -13,8 +13,10 @@ echo -e "$ascii_art"
 echo "=> Omakub patching script for Omakub"
 echo -e "\nBegin installation (or abort with ctrl+c)..."
 
-sudo apt-get update >/dev/null
-sudo apt-get install -y git >/dev/null
+if ! command -v git >/dev/null 2>&1; then
+	sudo apt-get update >/dev/null
+	sudo apt-get install -y git >/dev/null
+fi
 
 echo "Cloning Omakub..."
 rm -rf ~/.local/share/omakub-supercharged >/dev/null
