@@ -40,6 +40,9 @@ done < "$MIGRATIONS_FILE"
 # Update the local repository with the latest changes from the remote repository
 git pull > /dev/null
 
+# Initialize an array to track failed migrations
+FAILED_MIGRATIONS=()
+
 # Iterate through all shell script files in the migrations directory
 for file in $OMAKUB_PATH/migrations/*.sh; do
   # Extract just the filename without the directory path
