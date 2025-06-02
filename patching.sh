@@ -3,13 +3,13 @@ export OMAKUB_DIRECTORY="${OMAKUB_DIRECTORY:-$HOME/.local/share/omakub}"
 echo "OMAKUB_DIRECTORY: $OMAKUB_DIRECTORY"
 
 echo "Add Helper functions to Omakub"
-cp -fr ~/.local/share/omakub-supercharged/src/shared $OMAKUB_DIRECTORY/shared
+cp -fr ~/.local/share/omakub-supercharged/src/shared/* $OMAKUB_DIRECTORY/shared
 
 echo "Add Utilities to Omakub"
 cp -fr ~/.local/share/omakub-supercharged/src/utils $OMAKUB_DIRECTORY/utils
 
 echo "Add Config scripts to Omakub"
-cp -fr ~/.local/share/omakub-supercharged/src/configs $OMAKUB_DIRECTORY/configs
+cp -fr ~/.local/share/omakub-supercharged/src/configs/* $OMAKUB_DIRECTORY/configs
 
 echo "Add Optional Applications to Omakub"
 cp -f ~/.local/share/omakub-supercharged/src/install/desktop/optional/* $OMAKUB_DIRECTORY/install/desktop/optional/
