@@ -21,15 +21,15 @@ fi
 echo "Cloning or updating Omakub..."
 if [ -d ~/.local/share/omakub-supercharged/.git ]; then
 	cd ~/.local/share/omakub-supercharged
-	git fetch origin "${OMAKUB_REF:-stable}"
-	git checkout "${OMAKUB_REF:-stable}"
-	git pull origin "${OMAKUB_REF:-stable}"
+	git fetch origin "${OMAKUB_REF:-main}"
+	git checkout "${OMAKUB_REF:-main}"
+	git pull origin "${OMAKUB_REF:-main}"
 	cd -
 else
 	git clone https://github.com/joel/omakub-supercharged.git ~/.local/share/omakub-supercharged >/dev/null
 	if [[ $OMAKUB_REF != "master" ]]; then
 		cd ~/.local/share/omakub-supercharged
-		git fetch origin "${OMAKUB_REF:-stable}" && git checkout "${OMAKUB_REF:-stable}"
+		git fetch origin "${OMAKUB_REF:-main}" && git checkout "${OMAKUB_REF:-main}"
 		cd -
 	fi
 fi
