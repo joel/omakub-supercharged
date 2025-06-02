@@ -17,6 +17,11 @@ if ! command -v git >/dev/null 2>&1; then
 	sudo apt-get install -y git >/dev/null
 fi
 
+if [ ! -d "$HOME/.local/share/omakub" ]; then
+	echo "Error: Omakub is not installed. Please install [Omakub](https://omakub.org) first."
+	exit 1
+fi
+
 echo "Cloning or updating Omakub..."
 if [ -d ~/.local/share/omakub-supercharged/.git ]; then
 	cd ~/.local/share/omakub-supercharged
