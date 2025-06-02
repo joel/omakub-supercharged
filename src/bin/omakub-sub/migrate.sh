@@ -106,21 +106,34 @@ for file in $OMAKUB_PATH/migrations/*.sh; do
   fi
 done
 
-# Retry failed migrations
-if [ "${#FAILED_MIGRATIONS[@]}" -gt 0 ]; then
-  log_message "WARNING" "Retrying failed migrations: ${#FAILED_MIGRATIONS[@]} found." "$LOG_FILE"
-  for file in "${FAILED_MIGRATIONS[@]}"; do
-    filename=$(basename "$file")
-    migrate_at="${filename%.sh}"
-    migration_time="$(date '+%Y-%m-%d %H:%M:%S')"
-    log_message "WARNING" "Retrying migration $migrate_at ($filename)" "$LOG_FILE"
-    if source "$file"; then
-      echo "$migrate_at" >> "$MIGRATIONS_FILE"
-      log_message "SUCCESS" "Migration $migrate_at succeeded on retry and recorded." "$LOG_FILE"
-      echo "$migrate_at,$migration_time,success" >> "$MIGRATION_STATUS_FILE"
+ 
+# Check for previously failed migrations in the status file and retry them
+FAILED_PREV_MIGRATIONS=()
+if [ -f "$MIGRATION_STATUS_FILE" ]; then
+  while IFS=, read -r migration_id migration_time migration_status; do
+    if [[ "$migration_status" == "failed" ]]; then
+      FAILED_PREV_MIGRATIONS+=("$migration_id")
+    fi
+  done < "$MIGRATION_STATUS_FILE"
+fi
+
+if [ "${#FAILED_PREV_MIGRATIONS[@]}" -gt 0 ]; then
+  log_message "WARNING" "Retrying previously failed migrations: ${#FAILED_PREV_MIGRATIONS[@]} found." "$LOG_FILE"
+  for migration_id in "${FAILED_PREV_MIGRATIONS[@]}"; do
+    migration_file="$OMAKUB_PATH/migrations/${migration_id}.sh"
+    if [ -f "$migration_file" ]; then
+      migration_time="$(date '+%Y-%m-%d %H:%M:%S')"
+      log_message "WARNING" "Retrying migration $migration_id ($migration_file)" "$LOG_FILE"
+      if source "$migration_file"; then
+        echo "$migration_id" >> "$MIGRATIONS_FILE"
+        log_message "SUCCESS" "Migration $migration_id succeeded on retry and recorded." "$LOG_FILE"
+        echo "$migration_id,$migration_time,success" >> "$MIGRATION_STATUS_FILE"
+      else
+        log_message "ERROR" "Migration $migration_id failed again. Manual intervention may be required." "$LOG_FILE"
+        echo "$migration_id,$migration_time,failed" >> "$MIGRATION_STATUS_FILE"
+      fi
     else
-      log_message "ERROR" "Migration $migrate_at failed again. Manual intervention may be required." "$LOG_FILE"
-      echo "$migrate_at,$migration_time,failed" >> "$MIGRATION_STATUS_FILE"
+      log_message "ERROR" "Migration file $migration_file not found for retry." "$LOG_FILE"
     fi
   done
 fi
