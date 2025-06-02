@@ -1,7 +1,17 @@
+
+# Source shared log initialization for migration tracking
+source "${OMAKUB_PATH}/shared/log-init"
+
 cd $OMAKUB_PATH
 
 # Path to the local migrations tracking file
 MIGRATIONS_FILE=~/.config/omakub/migrations.txt
+
+# Path to the migration status log (CSV for detailed tracking)
+MIGRATION_STATUS_FILE=~/.config/omakub/migrations_status.log
+
+# Ensure the status file exists
+touch "$MIGRATION_STATUS_FILE"
 
 # Check if the migrations file exists
 if [ ! -f "$MIGRATIONS_FILE" ]; then
@@ -69,16 +79,48 @@ for file in $OMAKUB_PATH/migrations/*.sh; do
   fi
 
   # Display which migration is being executed
-  echo "Running migration for $migrate_at"
-  
-  # Run the migration and only record it if it succeeds
+  log_message "INFO" "Running migration $migrate_at ($filename)" "$LOG_FILE"
+
+  # Track execution status
+  migration_status="failed"
+  migration_time="$(date '+%Y-%m-%d %H:%M:%S')"
+
   if source "$file"; then
     # Record this migration as executed by adding its timestamp to the migrations file
     echo "$migrate_at" >> "$MIGRATIONS_FILE"
-    echo "Migration $migrate_at executed successfully and recorded."
+    migration_status="success"
+    log_message "SUCCESS" "Migration $migrate_at executed successfully and recorded." "$LOG_FILE"
   else
-    echo "Migration $migrate_at failed. Not recording as executed."
+    log_message "WARNING" "Migration $migrate_at failed. Will retry after all migrations." "$LOG_FILE"
   fi
+
+  # Record status (CSV: migration_id,date_time,status)
+  echo "$migrate_at,$migration_time,$migration_status" >> "$MIGRATION_STATUS_FILE"
+
+  # Track failed migrations for retry
+  if [ "$migration_status" = "failed" ]; then
+    FAILED_MIGRATIONS+=("$file")
+  fi
+done
+
+# Retry failed migrations
+if [ "${#FAILED_MIGRATIONS[@]}" -gt 0 ]; then
+  log_message "WARNING" "Retrying failed migrations: ${#FAILED_MIGRATIONS[@]} found." "$LOG_FILE"
+  for file in "${FAILED_MIGRATIONS[@]}"; do
+    filename=$(basename "$file")
+    migrate_at="${filename%.sh}"
+    migration_time="$(date '+%Y-%m-%d %H:%M:%S')"
+    log_message "WARNING" "Retrying migration $migrate_at ($filename)" "$LOG_FILE"
+    if source "$file"; then
+      echo "$migrate_at" >> "$MIGRATIONS_FILE"
+      log_message "SUCCESS" "Migration $migrate_at succeeded on retry and recorded." "$LOG_FILE"
+      echo "$migrate_at,$migration_time,success" >> "$MIGRATION_STATUS_FILE"
+    else
+      log_message "ERROR" "Migration $migrate_at failed again. Manual intervention may be required." "$LOG_FILE"
+      echo "$migrate_at,$migration_time,failed" >> "$MIGRATION_STATUS_FILE"
+    fi
+  done
+fi
 done
 
 # Clear the shell messages (clear the terminal)
