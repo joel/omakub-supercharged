@@ -12,7 +12,8 @@ echo "Add Config scripts to Omakub"
 cp -fr ~/.local/share/omakub-supercharged/src/configs/* $OMAKUB_DIRECTORY/configs
 
 echo "Add Optional Applications to Omakub"
-cp -f ~/.local/share/omakub-supercharged/src/install/desktop/optional/* $OMAKUB_DIRECTORY/install/desktop/optional/
+cp -fr ~/.local/share/omakub-supercharged/src/install/desktop/optional/* $OMAKUB_DIRECTORY/install/desktop/optional/
+cp -fr ~/.local/share/omakub-supercharged/src/install/desktop/* $OMAKUB_DIRECTORY/install/desktop/
 cp ~/.local/share/omakub-supercharged/src/bin/omakub-sub/install-optional-apps.sh $OMAKUB_DIRECTORY/bin/omakub-sub/install-optional-apps.sh
 
 echo "Overwrite Migrate script"
