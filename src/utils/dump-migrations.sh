@@ -3,7 +3,7 @@
 # This script initializes ~/.config/omakub/migrations.txt with the migration timestamps
 # from all migration scripts in $OMAKUB_PATH/migrations/*.sh, sorted in ascending order.
 
-set -e
+# set -e
 
 # Ensure ~/.config/omakub exists
 mkdir -p ~/.config/omakub
@@ -18,14 +18,19 @@ MIGRATION_STATUS_FILE=~/.config/omakub/migrations_status.log
 # Clear the migration status file if it exists
 > "$MIGRATION_STATUS_FILE"
 
-
 # Find all migration scripts, extract their timestamps, sort, and write to the files
-for file in "$OMAKUB_PATH"/migrations/*.sh; do
+for file in "$OMAKUB_PATH/migrations/*.sh"; do
+  echo "Processing migration file: [$file]"
+
   filename=$(basename "$file")
+
   migrate_at="${filename%.sh}"
+
   # Only add if it's a valid number (timestamp)
   if [[ "$migrate_at" =~ ^[0-9]+$ ]]; then
     echo "$migrate_at"
+  else
+    echo "Skipping invalid migration file: [$file]"
   fi
 done | sort -n > "$MIGRATIONS_FILE"
 
