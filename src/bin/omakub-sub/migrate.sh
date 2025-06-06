@@ -1,11 +1,13 @@
+cd "$OMAKUB_PATH"
 
 # Source shared log initialization for migration tracking
 source "${OMAKUB_PATH}/shared/log-init"
 
-cd $OMAKUB_PATH
-
 # Path to the local migrations tracking file
 MIGRATIONS_FILE=~/.config/omakub/migrations.txt
+
+# Ensure the directory exists
+mkdir -p "$(dirname "$MIGRATIONS_FILE")"
 
 # Path to the migration status log (CSV for detailed tracking)
 MIGRATION_STATUS_FILE=~/.config/omakub/migrations_status.log
@@ -38,14 +40,16 @@ while IFS= read -r line; do
 done < "$MIGRATIONS_FILE"
 
 # Update the local repository with the latest changes from the remote repository
+git stash > /dev/null 2>&1
+git fetch --all > /dev/null
 git pull > /dev/null
-
+git stash pop > /dev/null 2>&1
 
 # Iterate through all shell script files in the migrations directory
 for file in $OMAKUB_PATH/migrations/*.sh; do
   # Extract just the filename without the directory path
   filename=$(basename "$file")
-  
+
   # Remove the .sh extension to get the migration timestamp
   # Migration files are named with Unix timestamps (e.g., 1747474348.sh)
   migrate_at="${filename%.sh}"
@@ -97,12 +101,11 @@ for file in $OMAKUB_PATH/migrations/*.sh; do
 
   # Record status (CSV: migration_id,date_time,status)
   echo "$migrate_at,$migration_time,$migration_status" >> "$MIGRATION_STATUS_FILE"
-
 done
 
- 
 # Check for previously failed migrations in the status file and retry them
 FAILED_PREV_MIGRATIONS=()
+
 if [ -f "$MIGRATION_STATUS_FILE" ]; then
   while IFS=, read -r migration_id migration_time migration_status; do
     if [[ "$migration_status" == "failed" ]]; then
@@ -132,6 +135,8 @@ if [ "${#FAILED_PREV_MIGRATIONS[@]}" -gt 0 ]; then
   done
 fi
 done
+
+sleep 20
 
 # Clear the shell messages (clear the terminal)
 clear
