@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # Shared log initialization for app install scripts
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${OMAKUB_PATH}/shared/helpers.sh"
+
 APP_NAME="$(basename "$0" | sed 's/^app-//' | sed 's/\.sh$//')"
-HELPERS_PATH="${OMAKUB_PATH}/shared/helpers.sh"
-TEMP_DIR=$(create_temp_dir)
 LOG_FILE=$(setup_log "$APP_NAME")
