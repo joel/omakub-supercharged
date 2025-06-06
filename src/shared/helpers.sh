@@ -1,7 +1,5 @@
 # Shared helper functions for Omakub installation scripts
-# This file contains common utilities used across multiple scripts
-
-source "${OMAKUB_PATH}/shared/helpers.sh"
+# This file contains common utilities use
 
 # Define colors for output
 GREEN="\033[0;32m"
@@ -17,13 +15,13 @@ setup_log() {
   local app_name="$1"
   local timestamp=$(date '+%Y%m%d_%H%M%S')
   local log_dir="/home/joel/.local/share/omakub/logs"
-  
+
   # Create logs directory if it doesn't exist
   mkdir -p "$log_dir"
-  
+
   # Create log file with timestamp
   local log_file="${log_dir}/${app_name}_install_${timestamp}.log"
-  
+
   # Return the log file path
   echo "$log_file"
 }
@@ -35,7 +33,7 @@ log_message() {
   local message="$2"
   local log_file="$3"
   local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
-  
+
   case "$level" in
     "INFO")
       level_color="$BLUE"
@@ -53,10 +51,10 @@ log_message() {
       level_color="$RESET"
       ;;
   esac
-  
+
   # Print to console with color
   echo -e "${level_color}${timestamp} [${level}]${RESET} ${message}"
-  
+
   # Print to log file without color codes
   echo "${timestamp} [${level}] ${message}" >> "$log_file"
 }
@@ -79,9 +77,9 @@ download_file() {
   local url="$1"
   local output_path="$2"
   local log_file="$3"
-  
+
   log_message "INFO" "Downloading ${url}" "$log_file"
-  
+
   if command_exists curl; then
     if curl -L --progress-bar "$url" -o "$output_path"; then
       log_message "SUCCESS" "Download completed: $output_path" "$log_file"
@@ -117,9 +115,9 @@ create_temp_dir() {
 install_deb_package() {
   local deb_path="$1"
   local log_file="$2"
-  
+
   log_message "INFO" "Installing package from: $deb_path" "$log_file"
-  
+
   if sudo dpkg -i "$deb_path" >> "$log_file" 2>&1; then
     log_message "SUCCESS" "Package installed successfully" "$log_file"
     return 0
