@@ -19,9 +19,7 @@ MIGRATION_STATUS_FILE=~/.config/omakub/migrations_status.log
 > "$MIGRATION_STATUS_FILE"
 
 # Find all migration scripts, extract their timestamps, sort, and write to the files
-for file in "$OMAKUB_PATH/migrations/*.sh"; do
-  echo "Processing migration file: [$file]"
-
+for file in $OMAKUB_PATH/migrations/*.sh; do
   filename=$(basename "$file")
 
   migrate_at="${filename%.sh}"
@@ -29,10 +27,10 @@ for file in "$OMAKUB_PATH/migrations/*.sh"; do
   # Only add if it's a valid number (timestamp)
   if [[ "$migrate_at" =~ ^[0-9]+$ ]]; then
     echo "$migrate_at"
-  else
-    echo "Skipping invalid migration file: [$file]"
   fi
 done | sort -n > "$MIGRATIONS_FILE"
+
+cat "$MIGRATIONS_FILE"
 
 # Also initialize the status log with all migrations as 'pending'
 while IFS= read -r migration_id; do
