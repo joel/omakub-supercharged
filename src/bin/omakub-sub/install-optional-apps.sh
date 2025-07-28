@@ -41,10 +41,11 @@ CHOICES=(
   "$(icon_status 'Google Chrome Unstable          Google Chrome Developer (Dev) Channel')"
   "$(icon_status 'Google Chrome Canary            Google Chrome Canary Channel')"
   "$(icon_status 'Gnome Extension pano@elhan.io   Next-gen Clipboard Manager')"
+  "$(icon_status 'Fish                            User-friendly command line shell')"
   "<< Back                   "
 )
 
-CHOICE=$(gum choose "${CHOICES[@]}" --height 15 --header "Install optional applications")
+CHOICE=$(gum choose "${CHOICES[@]}" --height 16 --header "Install optional applications")
 
 if [[ "$CHOICE" == "<< Back"* ]] || [[ -z "$CHOICE" ]]; then
   # Don't install anything
