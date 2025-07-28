@@ -12,7 +12,11 @@ echo "Add Config scripts to Omakub"
 cp -fr ~/.local/share/omakub-supercharged/src/configs/* $OMAKUB_DIRECTORY/configs
 
 echo "Update Omakub themes"
-cp -fvr ~/.local/share/omakub-supercharged/src/themes/**/* $OMAKUB_DIRECTORY/themes
+for theme in ~/.local/share/omakub-supercharged/src/themes/*; do
+  [ -d "$theme" ] || continue
+  theme_name=$(basename "$theme")
+  cp -fvr "$theme"/* "$OMAKUB_DIRECTORY/themes/$theme_name/"
+done
 
 echo "Add Optional Applications to Omakub"
 cp -fr ~/.local/share/omakub-supercharged/src/install/desktop/optional/* $OMAKUB_DIRECTORY/install/desktop/optional/
