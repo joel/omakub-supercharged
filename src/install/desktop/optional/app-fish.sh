@@ -17,4 +17,4 @@ log_message "INFO" "Installing Fish plugins..." "$LOG_FILE"
 
 # Fisher A plugin manager for Fish
 # https://github.com/jorgebucaran/fisher
-curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher
+fish -c 'curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher'
