@@ -1,0 +1,19 @@
+themes {
+    tokyo-night {
+        fg 169 177 214
+        bg 26 27 38
+        black 56 62 90
+        red 249 51 87
+        green 158 206 106
+        yellow 224 175 104
+        blue 122 162 247
+        magenta 187 154 247
+        cyan 42 195 222
+        white 192 202 245
+        orange 255 158 100
+
+        // For a more obvious text highlight
+        selection_background "#e0af68" // This is the hex for your 'yellow'
+        selection_foreground "#1a1b26" // This is the hex for your 'bg'
+    }
+}
