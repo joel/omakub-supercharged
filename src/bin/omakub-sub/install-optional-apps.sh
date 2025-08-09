@@ -10,7 +10,7 @@ icon_status() {
 
   if [[ "$app_name" == gnome-extension-* ]]; then
     extension_name="${app_name#gnome-extension-}"
-    if gnome-extensions list | grep -q "$extension_name"; then
+    if gnome-extensions list | grep -qi "$extension_name"; then
       echo "✔ $item"
       return
     else
@@ -27,7 +27,7 @@ icon_status() {
 }
 
 CHOICES=(
-  "$(icon_status 'Code Insiders                     Code editor for developers')"
+  "$(icon_status 'Code Insiders                   Code editor for developers')"
   "$(icon_status 'Linkquisition                   Browser-picker')"
   "$(icon_status 'Brave Browser                   Brave Browser Stable')"
   "$(icon_status 'Brave Browser Beta              Brave Browser Beta')"
@@ -41,11 +41,12 @@ CHOICES=(
   "$(icon_status 'Google Chrome Unstable          Google Chrome Developer (Dev) Channel')"
   "$(icon_status 'Google Chrome Canary            Google Chrome Canary Channel')"
   "$(icon_status 'Gnome Extension pano@elhan.io   Next-gen Clipboard Manager')"
+  "$(icon_status 'Gnome Extension gpaste          Clipboard Manager')"
   "$(icon_status 'Fish                            User-friendly command line shell')"
   "<< Back                   "
 )
 
-CHOICE=$(gum choose "${CHOICES[@]}" --height 16 --header "Install optional applications")
+CHOICE=$(gum choose "${CHOICES[@]}" --height 17 --header "Install optional applications")
 
 if [[ "$CHOICE" == "<< Back"* ]] || [[ -z "$CHOICE" ]]; then
   # Don't install anything
