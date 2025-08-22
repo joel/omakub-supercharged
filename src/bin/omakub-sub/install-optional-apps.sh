@@ -29,6 +29,7 @@ icon_status() {
 CHOICES=(
   "$(icon_status 'Code Insiders                   Code editor for developers')"
   "$(icon_status 'Linkquisition                   Browser-picker')"
+  "$(icon_status 'Doppler                         Password Manager')"
   "$(icon_status 'Brave Browser                   Brave Browser Stable')"
   "$(icon_status 'Brave Browser Beta              Brave Browser Beta')"
   "$(icon_status 'Brave Browser Nightly           Brave Browser Nightly')"
@@ -46,7 +47,7 @@ CHOICES=(
   "<< Back                   "
 )
 
-CHOICE=$(gum choose "${CHOICES[@]}" --height 17 --header "Install optional applications")
+CHOICE=$(gum choose "${CHOICES[@]}" --height 18 --header "Install optional applications")
 
 if [[ "$CHOICE" == "<< Back"* ]] || [[ -z "$CHOICE" ]]; then
   # Don't install anything
