@@ -31,6 +31,7 @@ CHOICES=(
   "$(icon_status 'Linkquisition                   Browser-picker')"
   "$(icon_status 'Doppler                         Password Manager')"
   "$(icon_status 'Kubectl                         Kubernetes CLI')"
+  "$(icon_status 'AWS                             Amazon Web Services CLI')"
   "$(icon_status 'Brave Browser                   Brave Browser Stable')"
   "$(icon_status 'Brave Browser Beta              Brave Browser Beta')"
   "$(icon_status 'Brave Browser Nightly           Brave Browser Nightly')"
@@ -48,7 +49,7 @@ CHOICES=(
   "<< Back                   "
 )
 
-CHOICE=$(gum choose "${CHOICES[@]}" --height 19 --header "Install optional applications")
+CHOICE=$(gum choose "${CHOICES[@]}" --height 20 --header "Install optional applications")
 
 if [[ "$CHOICE" == "<< Back"* ]] || [[ -z "$CHOICE" ]]; then
   # Don't install anything
