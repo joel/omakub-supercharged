@@ -75,8 +75,9 @@ archive_name="${asset_path##*/}"
 archive_path="${tmp_dir}/${archive_name}"
 
 if [[ -n "${current_version}" && "${current_version}" == *"${latest_version}"* ]]; then
-  log_message "INFO" "${APP_NAME} already at latest version (${latest_version}); nothing to do" "$LOG_FILE"
-  gum spin --spinner globe --title "${APP_NAME} ready" -- sleep 2
+  final_message="${APP_NAME} already at latest version (${current_version:-unknown})"
+  log_message "INFO" "$final_message" "$LOG_FILE"
+  gum spin --spinner globe --title "${APP_NAME} current" -- sleep 2
   log_message "INFO" "${APP_NAME} installation flow finished" "$LOG_FILE"
   gum confirm "Go back to the menu?"
   exit 0
@@ -110,13 +111,18 @@ fi
 sudo install -m 755 "$binary_path" "$INSTALL_PATH" >>"$LOG_FILE" 2>&1
 
 new_version="$(aws-vault --version 2>&1 | head -n1)"
+
 if [[ -n "${current_version}" ]]; then
-  log_message "INFO" "${APP_NAME} updated to ${new_version:-unknown} (previous: ${current_version:-unknown})" "$LOG_FILE"
+  final_message="${APP_NAME} updated: ${current_version:-unknown} -> ${new_version:-unknown}"
+  spinner_title="${APP_NAME} updated"
 else
-  log_message "INFO" "${APP_NAME} installed: ${new_version:-unknown}" "$LOG_FILE"
+  final_message="${APP_NAME} installed: ${new_version:-unknown}"
+  spinner_title="${APP_NAME} installed"
 fi
 
-gum spin --spinner globe --title "${APP_NAME} ready" -- sleep 2
+log_message "INFO" "$final_message" "$LOG_FILE"
+
+gum spin --spinner globe --title "$spinner_title" -- sleep 2
 
 log_message "INFO" "${APP_NAME} installation flow finished" "$LOG_FILE"
 
