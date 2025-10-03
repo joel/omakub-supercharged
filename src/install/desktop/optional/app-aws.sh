@@ -18,7 +18,27 @@ cd "$tmp_dir" || {
 log_message "INFO" "Starting $APP_NAME installation flow" "$LOG_FILE"
 
 if snap list "$APP_NAME" >/dev/null 2>&1; then
-  log_message "INFO" "$APP_NAME already installed; skipping snap install" "$LOG_FILE"
+  log_message "INFO" "$APP_NAME already installed; checking for updates" "$LOG_FILE"
+
+  if SNAP_REFRESH_LIST_OUTPUT=$(snap refresh --list 2>>"$LOG_FILE"); then
+    if echo "$SNAP_REFRESH_LIST_OUTPUT" | grep -qE '^aws-cli[[:space:]]'; then
+      log_message "INFO" "Update available for $APP_NAME; refreshing" "$LOG_FILE"
+      if ! sudo snap refresh aws-cli >>"$LOG_FILE" 2>&1; then
+        log_message "ERROR" "Failed to refresh $APP_NAME snap" "$LOG_FILE"
+        exit 1
+      fi
+      log_message "INFO" "$APP_NAME refresh completed" "$LOG_FILE"
+    else
+      log_message "INFO" "No newer $APP_NAME revision available" "$LOG_FILE"
+    fi
+  else
+    log_message "WARN" "Could not determine update availability for $APP_NAME; attempting refresh" "$LOG_FILE"
+    if ! sudo snap refresh aws-cli >>"$LOG_FILE" 2>&1; then
+      log_message "ERROR" "Failed to refresh $APP_NAME snap" "$LOG_FILE"
+      exit 1
+    fi
+    log_message "INFO" "$APP_NAME refresh completed" "$LOG_FILE"
+  fi
 else
   log_message "INFO" "Installing $APP_NAME via snap" "$LOG_FILE"
   if ! sudo snap install aws-cli --classic >>"$LOG_FILE" 2>&1; then
