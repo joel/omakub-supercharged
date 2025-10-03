@@ -14,6 +14,7 @@ INSTALL_PATH="/usr/local/bin/aws-vault"
 
 command -v curl >/dev/null 2>&1 || {
   log_message "ERROR" "curl is required to install ${APP_NAME}" "$LOG_FILE"
+  sleep 5
   exit 1
 }
 
@@ -23,6 +24,7 @@ case "$(uname -m)" in
   arm64|aarch64) ARCH_SUFFIX="linux-arm64" ;;
   *)
     log_message "ERROR" "Unsupported architecture $(uname -m)" "$LOG_FILE"
+    sleep 5
     exit 1
     ;;
 esac
@@ -31,6 +33,7 @@ tmp_dir="$(create_temp_dir)"
 trap 'rm -rf "${tmp_dir}"' EXIT
 cd "$tmp_dir" || {
   log_message "ERROR" "Failed to enter temp directory ${tmp_dir}" "$LOG_FILE"
+  sleep 5
   exit 1
 }
 
@@ -60,6 +63,7 @@ latest_version="${latest_tag#v}"
 # Pull the release HTML once so we can find the correct download link.
 release_html=$(curl -fsSL "$LATEST_RELEASE_URL" 2>>"$LOG_FILE") || {
   log_message "ERROR" "Failed to fetch release page" "$LOG_FILE"
+  sleep 5
   exit 1
 }
 
@@ -67,6 +71,7 @@ asset_path=$(printf '%s\n' "$release_html" | grep -oE "/${REPO}/releases/downloa
 
 if [[ -z "${asset_path}" ]]; then
   log_message "ERROR" "Could not locate a ${ARCH_SUFFIX} asset on the release page" "$LOG_FILE"
+  sleep 5
   exit 1
 fi
 
@@ -86,6 +91,7 @@ fi
 log_message "INFO" "Downloading ${archive_name}" "$LOG_FILE"
 if ! download_file "$download_url" "$archive_path" "$LOG_FILE"; then
   log_message "ERROR" "Download failed" "$LOG_FILE"
+  sleep 5
   exit 1
 fi
 
@@ -97,6 +103,7 @@ case "$archive_name" in
     unzip -o "$archive_path" >>"$LOG_FILE" 2>&1 ;;
   *)
     log_message "ERROR" "Unsupported archive format: ${archive_name}" "$LOG_FILE"
+    sleep 5
     exit 1
     ;;
 esac
@@ -105,6 +112,7 @@ binary_path=$(find "$tmp_dir" -maxdepth 2 -type f -name 'aws-vault*' -perm -u+x 
 
 if [[ -z "${binary_path}" ]]; then
   log_message "ERROR" "aws-vault binary not found after extraction" "$LOG_FILE"
+  sleep 5
   exit 1
 fi
 
