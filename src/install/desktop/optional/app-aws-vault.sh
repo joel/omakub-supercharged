@@ -92,23 +92,37 @@ if ! download_file "$download_url" "$archive_path" "$LOG_FILE"; then
   exit 1
 fi
 
-log_message "INFO" "Extracting archive" "$LOG_FILE"
+binary_path=""
+
+log_message "INFO" "Preparing binary" "$LOG_FILE"
 case "$archive_name" in
   *.tar.gz|*.tgz)
-    tar -xzf "$archive_path" >>"$LOG_FILE" 2>&1 ;;
+    if tar -xzf "$archive_path" >>"$LOG_FILE" 2>&1; then
+      binary_path=$(find "$tmp_dir" -maxdepth 2 -type f -name 'aws-vault*' -perm -u+x | head -n1 || true)
+    else
+      log_message "ERROR" "Failed to extract tar archive" "$LOG_FILE"
+      sleep 5
+      exit 1
+    fi
+    ;;
   *.zip)
-    unzip -o "$archive_path" >>"$LOG_FILE" 2>&1 ;;
+    if unzip -o "$archive_path" >>"$LOG_FILE" 2>&1; then
+      binary_path=$(find "$tmp_dir" -maxdepth 2 -type f -name 'aws-vault*' -perm -u+x | head -n1 || true)
+    else
+      log_message "ERROR" "Failed to unzip archive" "$LOG_FILE"
+      sleep 5
+      exit 1
+    fi
+    ;;
   *)
-    log_message "ERROR" "Unsupported archive format: ${archive_name}" "$LOG_FILE"
-    sleep 5
-    exit 1
+    log_message "INFO" "Treating download as standalone binary" "$LOG_FILE"
+    binary_path="$archive_path"
+    chmod +x "$binary_path"
     ;;
 esac
 
-binary_path=$(find "$tmp_dir" -maxdepth 2 -type f -name 'aws-vault*' -perm -u+x | head -n1 || true)
-
 if [[ -z "${binary_path}" ]]; then
-  log_message "ERROR" "aws-vault binary not found after extraction" "$LOG_FILE"
+  log_message "ERROR" "aws-vault binary not found after processing download" "$LOG_FILE"
   sleep 5
   exit 1
 fi
