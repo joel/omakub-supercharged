@@ -8,6 +8,9 @@ set -euo pipefail
 APP_NAME="kubectl"
 KUBE_KEYRING="/etc/apt/keyrings/kubernetes-apt-keyring.gpg"
 
+KUBECTL_INSTALLED=false
+PREVIOUS_VERSION=""
+
 tmp_dir="$(create_temp_dir)"
 cd "$tmp_dir" || {
   log_message "ERROR" "Failed to cd to temp dir $tmp_dir" "$LOG_FILE"
@@ -16,6 +19,14 @@ cd "$tmp_dir" || {
 
 log_message "INFO" "Starting $APP_NAME installation (Kubernetes CLI)" "$LOG_FILE"
 log_message "INFO" "Using temp directory: $tmp_dir" "$LOG_FILE"
+
+if command -v kubectl >/dev/null 2>&1; then
+  KUBECTL_INSTALLED=true
+  PREVIOUS_VERSION=$(kubectl version --client --output=yaml 2>>"$LOG_FILE" | grep gitVersion | awk '{print $2}') || PREVIOUS_VERSION="unknown"
+  log_message "INFO" "$APP_NAME already present (current version: ${PREVIOUS_VERSION:-unknown})" "$LOG_FILE"
+else
+  log_message "INFO" "$APP_NAME not detected; proceeding with fresh installation" "$LOG_FILE"
+fi
 
 # Prerequisites
 log_message "INFO" "Updating apt cache" "$LOG_FILE"
@@ -66,17 +77,29 @@ if ! sudo apt-get update -y >>"$LOG_FILE" 2>&1; then
   exit 1
 fi
 
-log_message "INFO" "Installing $APP_NAME" "$LOG_FILE"
-if ! sudo apt-get install -y kubectl >>"$LOG_FILE" 2>&1; then
-  log_message "ERROR" "Failed to install kubectl" "$LOG_FILE"
-  exit 1
+if [[ "$KUBECTL_INSTALLED" == "true" ]]; then
+  log_message "INFO" "$APP_NAME detected; attempting upgrade to latest version" "$LOG_FILE"
+  if ! sudo apt-get install -y --only-upgrade kubectl >>"$LOG_FILE" 2>&1; then
+    log_message "ERROR" "Failed to upgrade $APP_NAME" "$LOG_FILE"
+    exit 1
+  fi
+else
+  log_message "INFO" "Installing $APP_NAME" "$LOG_FILE"
+  if ! sudo apt-get install -y kubectl >>"$LOG_FILE" 2>&1; then
+    log_message "ERROR" "Failed to install kubectl" "$LOG_FILE"
+    exit 1
+  fi
 fi
 
 if command -v kubectl >/dev/null 2>&1; then
   CLIENT_VERSION=$(kubectl version --client --output=yaml 2>>"$LOG_FILE" | grep gitVersion | awk '{print $2}') || CLIENT_VERSION="unknown"
-  log_message "INFO" "kubectl installed successfully (client version: $CLIENT_VERSION)" "$LOG_FILE"
+  if [[ "$KUBECTL_INSTALLED" == "true" ]]; then
+    log_message "INFO" "$APP_NAME now at version: $CLIENT_VERSION (previous: ${PREVIOUS_VERSION:-unknown})" "$LOG_FILE"
+  else
+    log_message "INFO" "$APP_NAME installed successfully (client version: $CLIENT_VERSION)" "$LOG_FILE"
+  fi
 else
-  log_message "ERROR" "kubectl binary not found in PATH after installation" "$LOG_FILE"
+  log_message "ERROR" "$APP_NAME binary not found in PATH after installation" "$LOG_FILE"
   exit 1
 fi
 
