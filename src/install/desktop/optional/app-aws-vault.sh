@@ -9,7 +9,6 @@ set -euo pipefail
 
 APP_NAME="aws-vault"
 REPO="ByteNess/aws-vault"
-LATEST_RELEASE_URL="https://github.com/${REPO}/releases/latest"
 INSTALL_PATH="/usr/local/bin/aws-vault"
 
 command -v curl >/dev/null 2>&1 || {
@@ -51,32 +50,30 @@ fi
 
 log_message "INFO" "Checking latest release metadata" "$LOG_FILE"
 
-# Grab the final tag from the redirect URL
-latest_tag=$(curl -fsSL -o /dev/null -w '%{url_effective}' "$LATEST_RELEASE_URL" 2>>"$LOG_FILE" | awk -F'/' 'NF{print $NF}')
+release_json=$(curl -fsSL "https://api.github.com/repos/${REPO}/releases/latest" 2>>"$LOG_FILE") || {
+  log_message "ERROR" "Failed to fetch release metadata" "$LOG_FILE"
+  sleep 5
+  exit 1
+}
+
+latest_tag=$(printf '%s\n' "$release_json" | grep -m1 '"tag_name"' | sed -E 's/.*"tag_name"\s*:\s*"([^"]+)".*/\1/' || true)
 if [[ -z "${latest_tag}" ]]; then
   log_message "ERROR" "Unable to determine latest release tag" "$LOG_FILE"
+  sleep 5
   exit 1
 fi
 
 latest_version="${latest_tag#v}"
 
-# Pull the release HTML once so we can find the correct download link.
-release_html=$(curl -fsSL "$LATEST_RELEASE_URL" 2>>"$LOG_FILE") || {
-  log_message "ERROR" "Failed to fetch release page" "$LOG_FILE"
-  sleep 5
-  exit 1
-}
+download_url=$(printf '%s\n' "$release_json" | grep '"browser_download_url"' | grep "${ARCH_SUFFIX}" | head -n1 | sed -E 's/.*"browser_download_url"\s*:\s*"([^"]+)".*/\1/' || true)
 
-asset_path=$(printf '%s\n' "$release_html" | grep -oE "/${REPO}/releases/download/${latest_tag}/aws-vault[^\"]*${ARCH_SUFFIX}[^\"]*" | head -n1 || true)
-
-if [[ -z "${asset_path}" ]]; then
-  log_message "ERROR" "Could not locate a ${ARCH_SUFFIX} asset on the release page" "$LOG_FILE"
+if [[ -z "${download_url}" ]]; then
+  log_message "ERROR" "Could not locate a ${ARCH_SUFFIX} asset in the release metadata" "$LOG_FILE"
   sleep 5
   exit 1
 fi
 
-download_url="https://github.com${asset_path}"
-archive_name="${asset_path##*/}"
+archive_name="${download_url##*/}"
 archive_path="${tmp_dir}/${archive_name}"
 
 if [[ -n "${current_version}" && "${current_version}" == *"${latest_version}"* ]]; then
