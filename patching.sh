@@ -31,3 +31,8 @@ cp -fr ~/.local/share/omakub-supercharged/src/migrations/* $OMAKUB_DIRECTORY/mig
 
 echo "Add optional app entry to Install menu"
 ruby ~/.local/share/omakub-supercharged/bin/install-update.rb setup_action
+
+echo "Set XDG_CONFIG_HOME in shell defaults"
+echo "export XDG_CONFIG_HOME=\"$HOME/.config\"" >> $OMAKUB_DIRECTORY/defaults/bash/shell
+
+echo "Patching complete!"
