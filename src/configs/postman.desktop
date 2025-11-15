@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Postman
+Comment=Postman API Client
+# Adjust this path based on your choice (Option 1 or 2)
+Exec=/home/joel/.local/share/Postman/Postman
+# Adjust this path for the icon
+Icon=/home/joel/.local/share/Postman/app/resources/app/assets/icon.png
+Terminal=false
+Type=Application
+Categories=Development;
