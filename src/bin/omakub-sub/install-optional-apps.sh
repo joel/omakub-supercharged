@@ -48,10 +48,11 @@ CHOICES=(
   "$(icon_status 'Gnome Extension pano@elhan.io   Next-gen Clipboard Manager')"
   "$(icon_status 'Gnome Extension gpaste          Clipboard Manager')"
   "$(icon_status 'Fish                            User-friendly command line shell')"
+  "$(icon_status 'Yazi                            Terminal file manager')"
   "<< Back                   "
 )
 
-CHOICE=$(gum choose "${CHOICES[@]}" --height 22 --header "Install optional applications")
+CHOICE=$(gum choose "${CHOICES[@]}" --height 24 --header "Install optional applications")
 
 if [[ "$CHOICE" == "<< Back"* ]] || [[ -z "$CHOICE" ]]; then
   # Don't install anything
