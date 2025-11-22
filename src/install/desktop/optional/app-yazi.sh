@@ -19,6 +19,7 @@ fi
 
 if ! download_file "$INSTALL_SCRIPT_URL" "$INSTALL_SCRIPT_PATH" "$LOG_FILE"; then
   log_message "ERROR" "Unable to download Yazi installer from ${INSTALL_SCRIPT_URL}" "$LOG_FILE"
+  sleep 5
   exit 1
 fi
 
@@ -28,6 +29,7 @@ if bash "$INSTALL_SCRIPT_PATH" >>"$LOG_FILE" 2>&1; then
   log_message "SUCCESS" "Yazi installer finished successfully." "$LOG_FILE"
 else
   log_message "ERROR" "Yazi installer failed. Check ${LOG_FILE} for details." "$LOG_FILE"
+  sleep 5
   exit 1
 fi
 
@@ -41,4 +43,4 @@ else
   log_message "WARNING" "Yazi binary not found on PATH after install." "$LOG_FILE"
 fi
 
-gum spin --spinner globe --title "Yazi install completed" -- sleep 2
+gum spin --spinner globe --title "Yazi install completed" -- sleep 3
