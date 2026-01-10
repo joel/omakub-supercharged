@@ -33,6 +33,29 @@ else
   exit 1
 fi
 
+log_message "INFO" "Configuring Bitwarden native messaging for Chromium-based browsers..." "$LOG_FILE"
+source_host="$HOME/.config/google-chrome/NativeMessagingHosts/com.8bit.bitwarden.json"
+if [[ -f "$source_host" ]]; then
+  chromium_target_dirs=(
+    "$HOME/.config/BraveSoftware/Brave-Browser/NativeMessagingHosts"
+    "$HOME/.config/BraveSoftware/Brave-Browser-Beta/NativeMessagingHosts"
+    "$HOME/.config/BraveSoftware/Brave-Browser-Nightly/NativeMessagingHosts"
+    "$HOME/.config/google-chrome-beta/NativeMessagingHosts"
+    "$HOME/.config/google-chrome-unstable/NativeMessagingHosts"
+    "$HOME/.config/chromium/NativeMessagingHosts"
+  )
+
+  for target_dir in "${chromium_target_dirs[@]}"; do
+    if mkdir -p "$target_dir" && ln -sf "$source_host" "$target_dir/com.8bit.bitwarden.json"; then
+      log_message "SUCCESS" "Linked Bitwarden host to $target_dir" "$LOG_FILE"
+    else
+      log_message "WARNING" "Failed to link Bitwarden host to $target_dir" "$LOG_FILE"
+    fi
+  done
+else
+  log_message "WARNING" "Bitwarden native messaging host not found at $source_host; run Bitwarden once and re-run this installer to link other browsers." "$LOG_FILE"
+fi
+
 rm -f "$deb_file"
 log_message "INFO" "Cleaned up the downloaded package." "$LOG_FILE"
 
