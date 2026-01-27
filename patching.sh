@@ -11,6 +11,9 @@ cp -fr ~/.local/share/omakub-supercharged/src/utils $OMAKUB_DIRECTORY/
 echo "Add Config scripts to Omakub"
 cp -fr ~/.local/share/omakub-supercharged/src/configs/* $OMAKUB_DIRECTORY/configs
 
+echo "Add Defaults scripts to Omakub"
+cp -fr ~/.local/share/omakub-supercharged/src/defaults/* $OMAKUB_DIRECTORY/defaults
+
 echo "Update Omakub themes"
 for theme in ~/.local/share/omakub-supercharged/src/themes/*; do
   [ -d "$theme" ] || continue
