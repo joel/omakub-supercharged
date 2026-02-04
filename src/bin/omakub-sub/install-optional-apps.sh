@@ -32,6 +32,7 @@ CHOICES=(
   "$(icon_status 'Postman                         API Client')"
   "$(icon_status 'Bitwarden                       Password Manager')"
   "$(icon_status 'Doppler                         Password Manager')"
+  "$(icon_status 'NordVPN                         VPN Client')"
   "$(icon_status 'Kubectl                         Kubernetes CLI')"
   "$(icon_status 'AWS                             Amazon Web Services CLI')"
   "$(icon_status 'AWS Vault                       AWS Vault CLI')"
@@ -53,7 +54,7 @@ CHOICES=(
   "<< Back                   "
 )
 
-CHOICE=$(gum choose "${CHOICES[@]}" --height 26 --header "Install optional applications")
+CHOICE=$(gum choose "${CHOICES[@]}" --height 27 --header "Install optional applications")
 
 if [[ "$CHOICE" == "<< Back"* ]] || [[ -z "$CHOICE" ]]; then
   # Don't install anything
